@@ -59,6 +59,12 @@
   "use strict";
   // Код писать здесь
 
+  const CommentListNach = document.querySelector('.comments')
+  const CommentList = CommentListNach.innerHTML
+  const LikesElements = document.querySelectorAll('.like-button')
+
+
+
   document.querySelector('.add-form-button').addEventListener('click', () => {
     const commentsList = document.querySelector('.comments');
     const nameInput = document.querySelector('.add-form-name').value;
@@ -84,7 +90,7 @@
       <div class="comment-footer">
         <div class="likes">
           <span class="likes-counter">${randomLikes}</span>
-          <button class="like-button" title="Лайк"></button>
+          <button class="like-button" title="Лайк" data-like=""></button>
         </div>
       </div>
     </li>
@@ -94,7 +100,36 @@
 
     document.querySelector('.add-form-name').value = '';
     document.querySelector('.add-form-text').value = '';
+
+    const LikesElements = document.querySelectorAll('.like-button')
+    const CounterElements = document.querySelectorAll('.likes-counter')
+    const test2End = document.querySelectorAll('.likes')
+
+    const likeButtons = document.querySelectorAll('.like-button');
+
+    likeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const likesContainer = button.closest('.likes');  
+        const counter = likesContainer.querySelector('.likes-counter');  
+        const currentLikes = parseInt(counter.textContent);  
+
+        
+        button.classList.toggle('-active-like');
+
+        
+        if (button.classList.contains('-active-like')) {
+          counter.textContent = currentLikes + 1;
+        } else {
+          counter.textContent = currentLikes - 1;
+        }
+      });
+    });
   });
+
+
+
+
+
 
 
   console.log("It works!");
