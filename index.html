@@ -10,7 +10,7 @@
 <body>
   <div class="container">
     <ul class="comments">
-      <li class="comment">
+      <!-- <li class="comment">
         <div class="comment-header">
           <div>Глеб Фокин</div>
           <div>12.02.22 12:18</div>
@@ -43,7 +43,7 @@
             <button class="like-button -active-like"></button>
           </div>
         </div>
-      </li>
+      </li> -->
     </ul>
     <div class="add-form">
       <input type="text" class="add-form-name" placeholder="Введите ваше имя" />
@@ -59,11 +59,62 @@
   "use strict";
   // Код писать здесь
 
-  const CommentListNach = document.querySelector('.comments')
-  const CommentList = CommentListNach.innerHTML
-  const LikesElements = document.querySelectorAll('.like-button')
+  const spisokComments = document.querySelector('.comments');
+
+  let commentsStats = [
+    { name: 'Глеб Фокин', date: '12.02.22 12:18', comment: 'Это будет первый комментарий на этой странице', likes: '3', Clicked: false },
+    { name: 'Варвара Н.', date: '13.02.22 19:22', comment: 'Мне нравится как оформлена эта страница! ❤', likes: '75', Clicked: true }
+  ]
+
+  const renderFunctionComments = () => {
+    const commentHTML = commentsStats.map((comment) => {
+      return `<li class="comment">
+        <div class="comment-header">
+          <div>${comment.name}</div>
+          <div>${comment.date}</div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            ${comment.comment}
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">${comment.likes}</span>
+            <button class="like-button ${comment.Clicked ? '-active-like' : ''}"></button>
+          </div>
+        </div>
+      </li>`
+    }).join('')
+
+    spisokComments.innerHTML = commentHTML
 
 
+
+  }
+
+  renderFunctionComments()
+
+  document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('like-button')) {
+
+      const button = e.target;
+      const commentElement = button.closest('.comment');
+      const likesContainer = button.closest('.likes');
+      const counter = likesContainer.querySelector('.likes-counter');
+
+      const index = Array.from(spisokComments.children).indexOf(commentElement);
+
+      commentsStats[index].Clicked = !commentsStats[index].Clicked;
+
+      const currentLikes = parseInt(counter.textContent) || 0;
+      commentsStats[index].likes = commentsStats[index].Clicked
+        ? (currentLikes + 1).toString()
+        : Math.max(0, currentLikes - 1).toString();
+
+      renderFunctionComments();
+    }
+  });
 
   document.querySelector('.add-form-button').addEventListener('click', () => {
     const commentsList = document.querySelector('.comments');
@@ -78,52 +129,13 @@
       return;
     }
 
-    const commentHTML = `
-    <li class="comment">
-      <div class="comment-header">
-        <div>${nameInput}</div>
-        <div>${dateStr}</div>
-      </div>
-      <div class="comment-body">
-        <div class="comment-text">${textInput}</div>
-      </div>
-      <div class="comment-footer">
-        <div class="likes">
-          <span class="likes-counter">${randomLikes}</span>
-          <button class="like-button" title="Лайк" data-like=""></button>
-        </div>
-      </div>
-    </li>
-  `;
-
-    commentsList.insertAdjacentHTML('beforeend', commentHTML);
+    commentsStats.push({ name: nameInput, date: dateStr, comment: textInput, likes: randomLikes, Clicked: false })
 
     document.querySelector('.add-form-name').value = '';
     document.querySelector('.add-form-text').value = '';
 
-    const LikesElements = document.querySelectorAll('.like-button')
-    const CounterElements = document.querySelectorAll('.likes-counter')
-    const test2End = document.querySelectorAll('.likes')
+    renderFunctionComments()
 
-    const likeButtons = document.querySelectorAll('.like-button');
-
-    likeButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const likesContainer = button.closest('.likes');  
-        const counter = likesContainer.querySelector('.likes-counter');  
-        const currentLikes = parseInt(counter.textContent);  
-
-        
-        button.classList.toggle('-active-like');
-
-        
-        if (button.classList.contains('-active-like')) {
-          counter.textContent = currentLikes + 1;
-        } else {
-          counter.textContent = currentLikes - 1;
-        }
-      });
-    });
   });
 
 
