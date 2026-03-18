@@ -118,7 +118,20 @@
 
   });
 
-  document.addEventListener('click', function (e) {
+  
+
+  const escapeHtml = (text) => {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, (m) => map[m]);
+  };
+
+document.addEventListener('click', function (e) {
     if (e.target.classList.contains('like-button')) {
 
       const button = e.target;
@@ -151,19 +164,6 @@
       document.querySelector('.add-form-text').focus();
     }
   });
-
-  const escapeHtml = (text) => {
-    const map = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, (m) => map[m]);
-  };
-
-
 
 
 
