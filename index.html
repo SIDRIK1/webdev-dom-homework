@@ -66,16 +66,6 @@
     { name: 'Варвара Н.', date: '13.02.22 19:22', comment: 'Мне нравится как оформлена эта страница! ❤', likes: '75', Clicked: true }
   ]
   
-  const escapeHtml = (text) => {
-    const map = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, (m) => map[m]);
-  };
 
   const renderFunctionComments = () => {
     const commentHTML = commentsStats.map((comment) => {
@@ -102,6 +92,31 @@
   }
 
   renderFunctionComments()
+
+  
+
+
+  document.querySelector('.add-form-button').addEventListener('click', () => {
+    const commentsList = document.querySelector('.comments');
+    const nameInput = document.querySelector('.add-form-name').value;
+    const textInput = document.querySelector('.add-form-text').value;
+    const now = new Date();
+    const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getFullYear().toString().slice(-2)} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const randomLikes = Math.floor(Math.random() * 101);
+
+    if (!nameInput.trim() || !textInput.trim()) {
+      alert('Заполните имя и комментарий!');
+      return;
+    }
+
+    commentsStats.push({ name: nameInput, date: dateStr, comment: textInput, likes: randomLikes, Clicked: false })
+
+    document.querySelector('.add-form-name').value = '';
+    document.querySelector('.add-form-text').value = '';
+
+    renderFunctionComments()
+
+  });
 
   document.addEventListener('click', function (e) {
     if (e.target.classList.contains('like-button')) {
@@ -137,30 +152,16 @@
     }
   });
 
-
-  document.querySelector('.add-form-button').addEventListener('click', () => {
-    const commentsList = document.querySelector('.comments');
-    const nameInput = document.querySelector('.add-form-name').value;
-    const textInput = document.querySelector('.add-form-text').value;
-    const now = new Date();
-    const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getFullYear().toString().slice(-2)} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    const randomLikes = Math.floor(Math.random() * 101);
-
-    if (!nameInput.trim() || !textInput.trim()) {
-      alert('Заполните имя и комментарий!');
-      return;
-    }
-
-    commentsStats.push({ name: nameInput, date: dateStr, comment: textInput, likes: randomLikes, Clicked: false })
-
-    document.querySelector('.add-form-name').value = '';
-    document.querySelector('.add-form-text').value = '';
-
-    renderFunctionComments()
-
-  });
-
-
+  const escapeHtml = (text) => {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, (m) => map[m]);
+  };
 
 
 
