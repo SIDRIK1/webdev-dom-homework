@@ -1,7 +1,4 @@
-import { renderFunctionComments } from './render.js';
 import { addCommentHandler, globalClickHandler } from './Obrabotch.js';
-
-renderFunctionComments();
 
 document
     .querySelector('.add-form-button')

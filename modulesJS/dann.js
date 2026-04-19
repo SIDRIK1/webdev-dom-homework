@@ -1,20 +1,23 @@
+import { renderFunctionComments } from './render.js';
+
 const spisokComments = document.querySelector('.comments');
 
-let commentsStats = [
-    {
-        name: 'Глеб Фокин',
-        date: '12.02.22 12:18',
-        comment: 'Это будет первый комментарий на этой странице',
-        likes: '3',
-        Clicked: false,
-    },
-    {
-        name: 'Варвара Н.',
-        date: '13.02.22 19:22',
-        comment: 'Мне нравится как оформлена эта страница! ❤',
-        likes: '75',
-        Clicked: true,
-    },
-];
+const updateTasks = (tasks) => {
+    commentsStats = tasks;
+};
 
-export { spisokComments, commentsStats };
+fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments')
+    .then((response) => {
+        return response.json();
+    })
+    .then((data) => {
+        console.log(data.comments);
+        updateTasks(data.comments);
+        renderFunctionComments();
+    });
+
+let commentsStats = [];
+
+updateTasks();
+
+export { spisokComments, commentsStats, updateTasks };

@@ -1,8 +1,8 @@
 import { commentsStats, spisokComments } from './dann.js';
 import { renderFunctionComments } from './render.js';
+import { updateTasks } from './dann.js';
 
 export const addCommentHandler = () => {
-    // const commentsList = document.querySelector('.comments');
     const nameInput = document.querySelector('.add-form-name').value;
     const textInput = document.querySelector('.add-form-text').value;
     const now = new Date();
@@ -14,18 +14,29 @@ export const addCommentHandler = () => {
         return;
     }
 
-    commentsStats.push({
-        name: nameInput,
-        date: dateStr,
-        comment: textInput,
-        likes: randomLikes,
-        Clicked: false,
+    fetch('https://wedev-api.sky.pro/api/v1/gleb-fokin/comments', {
+        method: 'POST',
+        body: JSON.stringify({
+            name: nameInput,
+            date: dateStr,
+            text: textInput,
+            likes: randomLikes,
+            isLiked: false,
+        }),
     });
+
+    fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments')
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data.comments);
+            updateTasks(data.comments);
+            renderFunctionComments();
+        });
 
     document.querySelector('.add-form-name').value = '';
     document.querySelector('.add-form-text').value = '';
-
-    renderFunctionComments();
 };
 
 export const globalClickHandler = (e) => {
@@ -58,7 +69,7 @@ export const globalClickHandler = (e) => {
         );
         const comment = commentsStats[index];
 
-        const replyPrefix = `Re: ${comment.name}\nОтвет на: "${comment.comment}" \n`;
+        const replyPrefix = `Re: ${comment.author.name}\nОтвет на: "${comment.text}" \n`;
 
         document.querySelector('.add-form-text').value = replyPrefix;
         document.querySelector('.add-form-text').focus();

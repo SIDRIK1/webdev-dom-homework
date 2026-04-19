@@ -5,18 +5,18 @@ const renderFunctionComments = () => {
         .map((comment) => {
             return `<li class="comment">
           <div class="comment-header">
-            <div>${comment.name}</div>
+            <div>${comment.author.name}</div>
             <div>${comment.date}</div>
           </div>
           <div class="comment-body">
             <div class="comment-text">
-              ${comment.comment}
+              ${comment.text}
             </div>
           </div>
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">${comment.likes}</span>
-              <button class="like-button ${comment.Clicked ? '-active-like' : ''}"></button>
+              <button class="like-button ${comment.isLiked}"></button>
             </div>
           </div>
         </li>`;
