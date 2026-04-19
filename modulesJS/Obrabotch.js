@@ -14,7 +14,7 @@ export const addCommentHandler = () => {
         return;
     }
 
-    fetch('https://wedev-api.sky.pro/api/v1/gleb-fokin/comments', {
+    fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments', {
         method: 'POST',
         body: JSON.stringify({
             name: nameInput,
