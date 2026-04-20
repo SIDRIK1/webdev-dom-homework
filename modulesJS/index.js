@@ -1,4 +1,4 @@
-import { addCommentHandler, globalClickHandler } from './Obrabotch.js';
+import { addCommentHandler, globalClickHandler } from './handlers.js';
 
 document
     .querySelector('.add-form-button')

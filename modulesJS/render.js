@@ -1,4 +1,4 @@
-import { commentsStats, spisokComments } from './dann.js';
+import { commentsStats, spisokComments } from './data.js';
 
 const renderFunctionComments = () => {
     const commentHTML = commentsStats
@@ -16,7 +16,7 @@ const renderFunctionComments = () => {
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">${comment.likes}</span>
-              <button class="like-button ${comment.isLiked}"></button>
+              <button class="like-button ${comment.isLiked ? '-active-like' : ''}"></button>
             </div>
           </div>
         </li>`;

@@ -1,6 +1,11 @@
-import { commentsStats, spisokComments } from './dann.js';
+import {
+    commentsStats,
+    spisokComments,
+    updateTasks,
+    formatDate,
+    urlAdress,
+} from './data.js';
 import { renderFunctionComments } from './render.js';
-import { updateTasks } from './dann.js';
 
 export const addCommentHandler = () => {
     const nameInput = document.querySelector('.add-form-name').value;
@@ -14,7 +19,7 @@ export const addCommentHandler = () => {
         return;
     }
 
-    fetch('https://wedev-api.sky.pro/api/v1/gleb-fokin/comments', {
+    fetch(urlAdress + 'comments', {
         method: 'POST',
         body: JSON.stringify({
             name: nameInput,
@@ -23,17 +28,40 @@ export const addCommentHandler = () => {
             likes: randomLikes,
             isLiked: false,
         }),
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error(
+                `Ошибка ${response.status}: ${response.statusText}`,
+            );
+        }
+        fetch(urlAdress + 'comments')
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data.comments);
+                const formattedComments = data.comments.map((comment) => ({
+                    ...comment,
+                    date: formatDate(comment.date),
+                }));
+                updateTasks(formattedComments);
+                renderFunctionComments();
+            });
     });
 
-    fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments')
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            console.log(data.comments);
-            updateTasks(data.comments);
-            renderFunctionComments();
-        });
+    // fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments')
+    //     .then((response) => {
+    //         return response.json();
+    //     })
+    //     .then((data) => {
+    //         console.log(data.comments);
+    //         const formattedComments = data.comments.map((comment) => ({
+    //             ...comment,
+    //             date: formatDate(comment.date),
+    //         }));
+    //         updateTasks(formattedComments);
+    //         renderFunctionComments();
+    //     });
 
     document.querySelector('.add-form-name').value = '';
     document.querySelector('.add-form-text').value = '';
@@ -50,10 +78,10 @@ export const globalClickHandler = (e) => {
             commentElement,
         );
 
-        commentsStats[index].Clicked = !commentsStats[index].Clicked;
+        commentsStats[index].isLiked = !commentsStats[index].isLiked;
 
         const currentLikes = parseInt(counter.textContent) || 0;
-        commentsStats[index].likes = commentsStats[index].Clicked
+        commentsStats[index].likes = commentsStats[index].isLiked
             ? (currentLikes + 1).toString()
             : Math.max(0, currentLikes - 1).toString();
 
