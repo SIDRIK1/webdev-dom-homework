@@ -1,18 +1,22 @@
-import {
-    commentsStats,
-    spisokComments,
-    updateTasks,
-    formatDate,
-    urlAdress,
-} from './data.js';
+import { commentsStats, spisokComments, urlAdress } from './data.js';
 import { renderFunctionComments } from './render.js';
+import { fetchGetRequest } from './fetch.js';
 
-export const addCommentHandler = () => {
+export const addCommentHandler = async () => {
     const nameInput = document.querySelector('.add-form-name').value;
     const textInput = document.querySelector('.add-form-text').value;
     const now = new Date();
     const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getFullYear().toString().slice(-2)} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     const randomLikes = Math.floor(Math.random() * 101);
+    const addFormhide = document.querySelector('.add-form');
+    addFormhide.style.display = 'none';
+    const commentsList = document.querySelector('.comments');
+    const loadingLi = document.createElement('li');
+    loadingLi.className = 'comment loading';
+    loadingLi.textContent = 'Пожалуйста подождите, комментарий добавляется...';
+    loadingLi.style.cssText =
+        'text-align: center; color: #666; font-style: italic;';
+    commentsList.appendChild(loadingLi);
 
     if (!nameInput.trim() || !textInput.trim()) {
         alert('Заполните имя и комментарий!');
@@ -28,40 +32,13 @@ export const addCommentHandler = () => {
             likes: randomLikes,
             isLiked: false,
         }),
-    }).then((response) => {
-        if (!response.ok) {
-            throw new Error(
-                `Ошибка ${response.status}: ${response.statusText}`,
-            );
-        }
-        fetch(urlAdress + 'comments')
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                console.log(data.comments);
-                const formattedComments = data.comments.map((comment) => ({
-                    ...comment,
-                    date: formatDate(comment.date),
-                }));
-                updateTasks(formattedComments);
-                renderFunctionComments();
-            });
-    });
-
-    // fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments')
-    //     .then((response) => {
-    //         return response.json();
-    //     })
-    //     .then((data) => {
-    //         console.log(data.comments);
-    //         const formattedComments = data.comments.map((comment) => ({
-    //             ...comment,
-    //             date: formatDate(comment.date),
-    //         }));
-    //         updateTasks(formattedComments);
-    //         renderFunctionComments();
-    //     });
+    })
+        .then(() => {
+            return fetchGetRequest();
+        })
+        .then(() => {
+            addFormhide.style.display = 'flex';
+        });
 
     document.querySelector('.add-form-name').value = '';
     document.querySelector('.add-form-text').value = '';
