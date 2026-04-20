@@ -3,6 +3,7 @@ import {
     spisokComments,
     updateTasks,
     formatDate,
+    urlAdress,
 } from './data.js';
 import { renderFunctionComments } from './render.js';
 
@@ -18,7 +19,7 @@ export const addCommentHandler = () => {
         return;
     }
 
-    fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments', {
+    fetch(urlAdress + 'comments', {
         method: 'POST',
         body: JSON.stringify({
             name: nameInput,
@@ -33,7 +34,7 @@ export const addCommentHandler = () => {
                 `Ошибка ${response.status}: ${response.statusText}`,
             );
         }
-        fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments')
+        fetch(urlAdress + 'comments')
             .then((response) => {
                 return response.json();
             })

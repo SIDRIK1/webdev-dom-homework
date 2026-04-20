@@ -1,6 +1,7 @@
 import { renderFunctionComments } from './render.js';
 
 const spisokComments = document.querySelector('.comments');
+export const urlAdress = 'https://wedev-api.sky.pro/api/v1/sidorov-aleksandr/';
 
 export function formatDate(isoDate) {
     const date = new Date(isoDate);
@@ -18,7 +19,7 @@ const updateTasks = (tasks) => {
     commentsStats = tasks;
 };
 
-fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments')
+fetch(urlAdress + 'comments')
     .then((response) => {
         return response.json();
     })
