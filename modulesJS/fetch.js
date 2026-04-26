@@ -1,6 +1,11 @@
 import { urlAdress, updateTasks } from './data.js';
 import { renderFunctionComments } from './render.js';
-import { addFormhide } from './handlers.js';
+import {
+    addFormhide,
+    commentsList,
+    loadingLi,
+    addCommentHandler,
+} from './handlers.js';
 
 const fetchGetRequest = () => {
     return fetch(urlAdress + 'comments')
@@ -37,10 +42,21 @@ const fetchPOSTRequest = () => {
             text: document.querySelector('.add-form-text').value,
             likes: Math.floor(Math.random() * 101),
             isLiked: false,
+            forceError: true,
         }),
     })
-        .then(() => {
-            return fetch(urlAdress + 'comments');
+        .then((response) => {
+            if (response.ok) {
+                document.querySelector('.add-form-name').value = '';
+                document.querySelector('.add-form-text').value = '';
+                return fetch(urlAdress + 'comments');
+            } else if (response.status == '500') {
+                throw new Error('Сервер не отвечает попробуйте позже');
+            } else {
+                throw new Error(
+                    'Имя и текст сообщения должны быть больше 3 символов',
+                );
+            }
         })
         .then((res) => {
             return res.json();
@@ -63,6 +79,24 @@ const fetchPOSTRequest = () => {
             addFormhide.style.display = 'flex';
             updateTasks(formattedComments);
             renderFunctionComments();
+        })
+        .catch((error) => {
+            if (error.message.includes('Сервер')) {
+                addCommentHandler();
+                // document.querySelector('.add-form-name').value = '';
+                // document.querySelector('.add-form-text').value = '';
+                // commentsList.removeChild(loadingLi);
+                // addFormhide.style.display = 'flex';
+                // alert('Сервер не отвечает, попробуйте позже');
+            } else if (error.message.includes('3')) {
+                commentsList.removeChild(loadingLi);
+                addFormhide.style.display = 'flex';
+                alert('Имя и текст должны быть >3 символов');
+            } else {
+                commentsList.removeChild(loadingLi);
+                addFormhide.style.display = 'flex';
+                alert('Пожалуйста проверьте подключение к сети');
+            }
         });
 };
 

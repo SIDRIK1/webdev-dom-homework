@@ -15,9 +15,6 @@ export const addCommentHandler = () => {
     commentsList.appendChild(loadingLi);
 
     fetchPOSTRequest();
-
-    document.querySelector('.add-form-name').value = '';
-    document.querySelector('.add-form-text').value = '';
 };
 
 export const globalClickHandler = (e) => {
@@ -57,4 +54,4 @@ export const globalClickHandler = (e) => {
     }
 };
 
-export { addFormhide };
+export { addFormhide, commentsList, loadingLi };
