@@ -2,11 +2,6 @@ import { commentsStats, spisokComments } from './data.js';
 import { renderFunctionComments } from './render.js';
 import { fetchPOSTRequest } from './fetch.js';
 
-const nameInput = document.querySelector('.add-form-name').value;
-const textInput = document.querySelector('.add-form-text').value;
-const now = new Date();
-const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getFullYear().toString().slice(-2)} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-const randomLikes = Math.floor(Math.random() * 101);
 const addFormhide = document.querySelector('.add-form');
 const commentsList = document.querySelector('.comments');
 const loadingLi = document.createElement('li');
@@ -62,4 +57,4 @@ export const globalClickHandler = (e) => {
     }
 };
 
-export { nameInput, dateStr, textInput, randomLikes, addFormhide };
+export { addFormhide };

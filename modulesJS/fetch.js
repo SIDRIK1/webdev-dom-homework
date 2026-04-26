@@ -1,12 +1,6 @@
 import { urlAdress, updateTasks } from './data.js';
 import { renderFunctionComments } from './render.js';
-import {
-    nameInput,
-    dateStr,
-    textInput,
-    randomLikes,
-    addFormhide,
-} from './handlers.js';
+import { addFormhide } from './handlers.js';
 
 const fetchGetRequest = () => {
     return fetch(urlAdress + 'comments')
@@ -38,10 +32,10 @@ const fetchPOSTRequest = () => {
     fetch(urlAdress + 'comments', {
         method: 'POST',
         body: JSON.stringify({
-            name: nameInput,
-            date: dateStr,
-            text: textInput,
-            likes: randomLikes,
+            name: document.querySelector('.add-form-name').value,
+            date: new Date(),
+            text: document.querySelector('.add-form-text').value,
+            likes: Math.floor(Math.random() * 101),
             isLiked: false,
         }),
     })
