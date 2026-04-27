@@ -83,11 +83,6 @@ const fetchPOSTRequest = () => {
         .catch((error) => {
             if (error.message.includes('Сервер')) {
                 addCommentHandler();
-                // document.querySelector('.add-form-name').value = '';
-                // document.querySelector('.add-form-text').value = '';
-                // commentsList.removeChild(loadingLi);
-                // addFormhide.style.display = 'flex';
-                // alert('Сервер не отвечает, попробуйте позже');
             } else if (error.message.includes('3')) {
                 commentsList.removeChild(loadingLi);
                 addFormhide.style.display = 'flex';

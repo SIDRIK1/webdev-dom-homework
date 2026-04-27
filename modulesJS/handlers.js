@@ -1,6 +1,6 @@
 import { commentsStats, spisokComments } from './data.js';
 import { renderFunctionComments } from './render.js';
-import { fetchPOSTRequest } from './fetch.js';
+import { fetchPOSTRequest } from './api.js';
 
 const addFormhide = document.querySelector('.add-form');
 const commentsList = document.querySelector('.comments');

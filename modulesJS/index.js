@@ -1,5 +1,5 @@
 import { addCommentHandler, globalClickHandler } from './handlers.js';
-import { fetchGetRequest } from './fetch.js';
+import { fetchGetRequest } from './api.js';
 
 fetchGetRequest();
 
