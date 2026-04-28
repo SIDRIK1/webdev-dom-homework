@@ -1,4 +1,4 @@
-import { commentsStats, spisokComments } from './data.js';
+import { commentsStats, spisokComments, updateTasks } from './data.js';
 import { renderFunctionComments } from './render.js';
 import { fetchPOSTRequest } from './api.js';
 
@@ -14,7 +14,7 @@ export const addCommentHandler = () => {
         'text-align: center; color: #666; font-style: italic;';
     commentsList.appendChild(loadingLi);
 
-    fetchPOSTRequest();
+    fetchPOSTRequest().then(updateTasks).then(renderFunctionComments);
 };
 
 export const globalClickHandler = (e) => {
