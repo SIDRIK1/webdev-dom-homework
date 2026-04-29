@@ -1,10 +1,5 @@
 import { urlAdress } from './data.js';
-import {
-    addFormhide,
-    commentsList,
-    loadingLi,
-    addCommentHandler,
-} from './handlers.js';
+import { commentsList, loadingLi, addCommentHandler } from './handlers.js';
 
 const fetchGetRequest = () => {
     return fetch(urlAdress + 'comments')
@@ -42,7 +37,6 @@ const fetchPOSTRequest = () => {
             return res.json();
         })
         .then(({ comments }) => {
-            addFormhide.style.display = 'flex';
             return comments;
         })
         .catch((error) => {
@@ -50,11 +44,9 @@ const fetchPOSTRequest = () => {
                 addCommentHandler();
             } else if (error.message.includes('3')) {
                 commentsList.removeChild(loadingLi);
-                addFormhide.style.display = 'flex';
                 alert('Имя и текст должны быть >3 символов');
             } else {
                 commentsList.removeChild(loadingLi);
-                addFormhide.style.display = 'flex';
                 alert('Пожалуйста проверьте подключение к сети');
             }
         });
