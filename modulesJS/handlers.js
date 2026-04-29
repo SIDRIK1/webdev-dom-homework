@@ -1,5 +1,16 @@
-import { commentsStats, spisokComments, updateTasks } from './data.js';
-import { renderFunctionComments } from './render.js';
+import {
+    commentsStats,
+    spisokComments,
+    updateTasks,
+    formAutorizationRegistration,
+    containerComments,
+    urlAdress,
+} from './data.js';
+import {
+    renderFunctionComments,
+    renderFunctionRegistration,
+    renderFunctionAutorization,
+} from './render.js';
 import { fetchPOSTRequest } from './api.js';
 
 const addFormhide = document.querySelector('.add-form');
@@ -14,7 +25,40 @@ export const addCommentHandler = () => {
         'text-align: center; color: #666; font-style: italic;';
     commentsList.appendChild(loadingLi);
 
-    fetchPOSTRequest().then(updateTasks).then(renderFunctionComments);
+    fetchPOSTRequest()
+        .then((response) => {
+            if (response.ok) {
+                document.querySelector('.add-form-name').value = '';
+                document.querySelector('.add-form-text').value = '';
+                return fetch(urlAdress + 'comments');
+            } else if (response.status == '500') {
+                throw new Error('Сервер не отвечает попробуйте позже');
+            } else {
+                throw new Error(
+                    'Имя и текст сообщения должны быть больше 3 символов',
+                );
+            }
+        })
+        .then((res) => {
+            return res.json();
+        })
+        .then(({ comments }) => {
+            return comments;
+        })
+        .catch((error) => {
+            if (error.message.includes('Сервер')) {
+                addCommentHandler();
+            } else if (error.message.includes('3')) {
+                commentsList.removeChild(loadingLi);
+                alert('Имя и текст должны быть >3 символов');
+            } else {
+                commentsList.removeChild(loadingLi);
+                alert('Пожалуйста проверьте подключение к сети');
+            }
+        })
+        .then(updateTasks)
+        .then(renderFunctionComments);
+    addFormhide.style.display = 'flex';
 };
 
 export const globalClickHandler = (e) => {
@@ -52,6 +96,19 @@ export const globalClickHandler = (e) => {
         document.querySelector('.add-form-text').value = replyPrefix;
         document.querySelector('.add-form-text').focus();
     }
+};
+
+export const clickNoneAutorization = () => {
+    formAutorizationRegistration.style.display = 'none';
+    containerComments.style.display = 'flex';
+};
+
+export const clickRegistration = () => {
+    renderFunctionRegistration();
+};
+
+export const clickToBackAutorization = () => {
+    renderFunctionAutorization();
 };
 
 export { addFormhide, commentsList, loadingLi };

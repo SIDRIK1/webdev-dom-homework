@@ -1,5 +1,4 @@
 import { urlAdress } from './data.js';
-import { commentsList, loadingLi, addCommentHandler } from './handlers.js';
 
 const fetchGetRequest = () => {
     return fetch(urlAdress + 'comments')
@@ -19,37 +18,7 @@ const fetchPOSTRequest = () => {
             isLiked: false,
             forceError: true,
         }),
-    })
-        .then((response) => {
-            if (response.ok) {
-                document.querySelector('.add-form-name').value = '';
-                document.querySelector('.add-form-text').value = '';
-                return fetch(urlAdress + 'comments');
-            } else if (response.status == '500') {
-                throw new Error('Сервер не отвечает попробуйте позже');
-            } else {
-                throw new Error(
-                    'Имя и текст сообщения должны быть больше 3 символов',
-                );
-            }
-        })
-        .then((res) => {
-            return res.json();
-        })
-        .then(({ comments }) => {
-            return comments;
-        })
-        .catch((error) => {
-            if (error.message.includes('Сервер')) {
-                addCommentHandler();
-            } else if (error.message.includes('3')) {
-                commentsList.removeChild(loadingLi);
-                alert('Имя и текст должны быть >3 символов');
-            } else {
-                commentsList.removeChild(loadingLi);
-                alert('Пожалуйста проверьте подключение к сети');
-            }
-        });
+    });
 };
 
 export { fetchGetRequest, fetchPOSTRequest };
