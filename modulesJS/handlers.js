@@ -2,69 +2,67 @@ import {
     commentsStats,
     spisokComments,
     updateTasks,
-    formatDate,
+    formAutorizationRegistration,
+    containerComments,
     urlAdress,
+    // randomLikesForComments,
 } from './data.js';
-import { renderFunctionComments } from './render.js';
+import {
+    renderFunctionComments,
+    renderFunctionRegistration,
+    renderFunctionAutorization,
+} from './render.js';
+import { fetchPostRequest } from './api.js';
+
+const addFormhide = document.querySelector('.add-form');
+const commentsList = document.querySelector('.comments');
+const loadingLi = document.createElement('li');
 
 export const addCommentHandler = () => {
-    const nameInput = document.querySelector('.add-form-name').value;
-    const textInput = document.querySelector('.add-form-text').value;
-    const now = new Date();
-    const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getFullYear().toString().slice(-2)} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    const randomLikes = Math.floor(Math.random() * 101);
+    const nameFromFormVvod = document.querySelector('.add-form-name').value;
+    const dateNew = new Date();
+    const textFromVvodForm = document.querySelector('.add-form-text').value;
+    addFormhide.style.display = 'none';
+    loadingLi.className = 'comment loading';
+    loadingLi.textContent = 'Пожалуйста подождите, комментарий добавляется...';
+    loadingLi.style.cssText =
+        'text-align: center; color: #666; font-style: italic;';
+    commentsList.appendChild(loadingLi);
 
-    if (!nameInput.trim() || !textInput.trim()) {
-        alert('Заполните имя и комментарий!');
-        return;
-    }
-
-    fetch(urlAdress + 'comments', {
-        method: 'POST',
-        body: JSON.stringify({
-            name: nameInput,
-            date: dateStr,
-            text: textInput,
-            likes: randomLikes,
-            isLiked: false,
-        }),
-    }).then((response) => {
-        if (!response.ok) {
-            throw new Error(
-                `Ошибка ${response.status}: ${response.statusText}`,
-            );
-        }
-        fetch(urlAdress + 'comments')
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                console.log(data.comments);
-                const formattedComments = data.comments.map((comment) => ({
-                    ...comment,
-                    date: formatDate(comment.date),
-                }));
-                updateTasks(formattedComments);
-                renderFunctionComments();
-            });
-    });
-
-    // fetch('https://wedev-api.sky.pro/api/v1/sidorov-alexsandr/comments')
-    //     .then((response) => {
-    //         return response.json();
-    //     })
-    //     .then((data) => {
-    //         console.log(data.comments);
-    //         const formattedComments = data.comments.map((comment) => ({
-    //             ...comment,
-    //             date: formatDate(comment.date),
-    //         }));
-    //         updateTasks(formattedComments);
-    //         renderFunctionComments();
-    //     });
-
-    document.querySelector('.add-form-name').value = '';
-    document.querySelector('.add-form-text').value = '';
+    fetchPostRequest(nameFromFormVvod, dateNew, textFromVvodForm)
+        .then((response) => {
+            if (response.ok) {
+                document.querySelector('.add-form-name').value = '';
+                document.querySelector('.add-form-text').value = '';
+                return fetch(urlAdress + 'comments');
+            } else if (response.status == '500') {
+                throw new Error('Сервер не отвечает попробуйте позже');
+            } else {
+                throw new Error(
+                    'Имя и текст сообщения должны быть больше 3 символов',
+                );
+            }
+        })
+        .then((res) => {
+            return res.json();
+        })
+        .then(({ comments }) => {
+            return comments;
+        })
+        .catch((error) => {
+            if (error.message.includes('Сервер')) {
+                addCommentHandler();
+            } else if (error.message.includes('3')) {
+                commentsList.removeChild(loadingLi);
+                alert('Имя и текст должны быть >3 символов');
+            } else {
+                commentsList.removeChild(loadingLi);
+                alert('Пожалуйста проверьте подключение к сети');
+            }
+        })
+        .then(updateTasks)
+        .then(renderFunctionComments);
+    addFormhide.style.display = 'flex';
 };
 
 export const globalClickHandler = (e) => {
@@ -103,3 +101,18 @@ export const globalClickHandler = (e) => {
         document.querySelector('.add-form-text').focus();
     }
 };
+
+export const clickNoneAutorization = () => {
+    formAutorizationRegistration.style.display = 'none';
+    containerComments.style.display = 'flex';
+};
+
+export const clickRegistration = () => {
+    renderFunctionRegistration();
+};
+
+export const clickToBackAutorization = () => {
+    renderFunctionAutorization();
+};
+
+export { addFormhide, commentsList, loadingLi };
