@@ -22,7 +22,6 @@ export const addCommentHandler = () => {
     const nameFromFormVvod = document.querySelector('.add-form-name').value;
     const dateNew = new Date();
     const textFromVvodForm = document.querySelector('.add-form-text').value;
-    let randomLikesForComments = Math.floor(Math.random() * 101);
     addFormhide.style.display = 'none';
     loadingLi.className = 'comment loading';
     loadingLi.textContent = 'Пожалуйста подождите, комментарий добавляется...';
@@ -30,12 +29,7 @@ export const addCommentHandler = () => {
         'text-align: center; color: #666; font-style: italic;';
     commentsList.appendChild(loadingLi);
 
-    fetchPostRequest(
-        nameFromFormVvod,
-        dateNew,
-        textFromVvodForm,
-        randomLikesForComments,
-    )
+    fetchPostRequest(nameFromFormVvod, dateNew, textFromVvodForm)
         .then((response) => {
             if (response.ok) {
                 document.querySelector('.add-form-name').value = '';

@@ -8,14 +8,13 @@ const fetchGetRequest = () => {
         });
 };
 
-function fetchPostRequest(name, date, text, likes) {
+function fetchPostRequest(name, date, text) {
     return fetch(urlAdress + 'comments', {
         method: 'POST',
         body: JSON.stringify({
             name: name,
             date: date,
             text: text,
-            likes: likes,
             isLiked: false,
             forceError: true,
         }),
